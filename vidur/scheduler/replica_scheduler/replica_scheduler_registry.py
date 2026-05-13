@@ -1,6 +1,9 @@
 from vidur.scheduler.replica_scheduler.faster_transformer_replica_scheduler import (
     FasterTransformerReplicaScheduler,
 )
+from vidur.scheduler.replica_scheduler.fifo_replica_scheduler import (
+    FifoReplicaScheduler,
+)
 from vidur.scheduler.replica_scheduler.lightllm_replica_scheduler import (
     LightLLMReplicaScheduler,
 )
@@ -24,6 +27,7 @@ class ReplicaSchedulerRegistry(BaseRegistry):
 ReplicaSchedulerRegistry.register(
     ReplicaSchedulerType.FASTER_TRANSFORMER, FasterTransformerReplicaScheduler
 )
+ReplicaSchedulerRegistry.register(ReplicaSchedulerType.FIFO, FifoReplicaScheduler)
 ReplicaSchedulerRegistry.register(ReplicaSchedulerType.ORCA, OrcaReplicaScheduler)
 ReplicaSchedulerRegistry.register(ReplicaSchedulerType.SARATHI, SarathiReplicaScheduler)
 ReplicaSchedulerRegistry.register(ReplicaSchedulerType.VLLM, VLLMReplicaScheduler)

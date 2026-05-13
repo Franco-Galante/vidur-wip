@@ -1,3 +1,6 @@
+from vidur.request_generator.custom_request_length_generator import (
+    CustomRequestLengthGenerator,
+)
 from vidur.request_generator.fixed_request_length_generator import (
     FixedRequestLengthGenerator,
 )
@@ -18,6 +21,9 @@ class RequestLengthGeneratorRegistry(BaseRegistry):
     pass
 
 
+RequestLengthGeneratorRegistry.register(
+    RequestLengthGeneratorType.CUSTOM, CustomRequestLengthGenerator
+)
 RequestLengthGeneratorRegistry.register(
     RequestLengthGeneratorType.ZIPF, ZipfRequestLengthGenerator
 )

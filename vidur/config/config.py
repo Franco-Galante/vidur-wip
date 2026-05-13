@@ -190,6 +190,21 @@ class FixedRequestLengthGeneratorConfig(BaseRequestLengthGeneratorConfig):
 
 
 @dataclass
+class CustomRequestLengthGeneratorConfig(BaseRequestLengthGeneratorConfig):
+    trace_file: str = field(
+        default="data/custom_lengths.csv",
+        metadata={
+            "help": "CSV file with num_prefill_tokens and num_decode_tokens columns. "
+            "Rows are sampled with replacement to form an empirical joint distribution."
+        },
+    )
+
+    @staticmethod
+    def get_type():
+        return RequestLengthGeneratorType.CUSTOM
+
+
+@dataclass
 class BaseRequestGeneratorConfig(BasePolyConfig):
     seed: int = field(
         default=42,
@@ -326,6 +341,36 @@ class SarathiSchedulerConfig(BaseReplicaSchedulerConfig):
     @staticmethod
     def get_type():
         return ReplicaSchedulerType.SARATHI
+
+
+@dataclass
+class FifoSchedulerConfig(BaseReplicaSchedulerConfig):
+    max_tokens_in_batch: int = field(
+        default=4096,
+        metadata={
+            "help": "Maximum total tokens (prefill + decode) per batch. "
+            "Must not exceed prediction_max_tokens_per_request."
+        },
+    )
+    m_star: float = field(
+        default=0.8,
+        metadata={
+            "help": "KV cache occupancy threshold [0, 1]. A new request is admitted "
+            "only if its prefill allocation would keep occupancy at or below this fraction."
+        },
+    )
+    preemption_policy: str = field(
+        default="youngest",
+        metadata={
+            "help": "Victim selection when KV cache is full during decode. "
+            "'youngest' preempts the most recently admitted request; "
+            "'oldest' preempts the longest-running one."
+        },
+    )
+
+    @staticmethod
+    def get_type():
+        return ReplicaSchedulerType.FIFO
 
 
 @dataclass
