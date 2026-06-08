@@ -17,8 +17,7 @@ Subfolders created:
     burstgpt/       — BurstGPT (KDD 2025)
     wildchat/       — WildChat-1M (NAACL 2024)
     lmsys_chat_1m/  — LMSYS-Chat-1M (ICLR 2024)  [requires HF_TOKEN + license acceptance]
-
-ShareChat (arXiv:2512.17843) is not included — no public download URL is available.
+    sharechat/      — ShareChat (arXiv:2512.17843)  [requires HF_TOKEN + license acceptance]
 """
 
 import argparse
@@ -30,7 +29,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
 
-ALL_DATASETS = ["azure_2023", "azure_2024", "azure_2025", "burstgpt", "wildchat", "lmsys"]
+ALL_DATASETS = ["azure_2023", "azure_2024", "azure_2025", "burstgpt", "wildchat", "lmsys", "sharechat"]
 
 
 # ---------------------------------------------------------------------------
@@ -221,6 +220,63 @@ def download_lmsys() -> None:
         )
 
 
+def download_sharechat() -> None:
+    """
+    ShareChat — arXiv:2512.17843
+    142,808 real-world conversations across 5 AI platforms (ChatGPT, Claude,
+    Gemini, Grok, Perplexity), ~4 GB of CSV/JSON files.
+    Requires prior license acceptance at https://huggingface.co/datasets/tucnguyen/ShareChat
+    and a HuggingFace token exported as HF_TOKEN.
+    Source: https://huggingface.co/datasets/tucnguyen/ShareChat
+    """
+    print("\n[sharechat] ShareChat")
+    try:
+        from huggingface_hub import hf_hub_download
+    except ImportError:
+        print("  [skip] `huggingface_hub` not installed. Run: pip install huggingface_hub")
+        return
+
+    out = BASE_DIR / "sharechat"
+    out.mkdir(parents=True, exist_ok=True)
+
+    token = os.environ.get("HF_TOKEN")
+    if not token:
+        print(
+            "  [warn] HF_TOKEN not set. This dataset requires license acceptance at\n"
+            "         https://huggingface.co/datasets/tucnguyen/ShareChat\n"
+            "         Set HF_TOKEN=<your_token> and re-run."
+        )
+
+    repo_id = "tucnguyen/ShareChat"
+    for fname in [
+        "chatgpt_results_final_language_filtered.csv",
+        "claude_results_final_language_filtered.csv",
+        "gemini_results_final_language_filtered.csv",
+        "grok_results_final_language_filtered.csv",
+        "perplexity_results_final_language_filtered.csv",
+        "filtered_out_conversations_non_target_languages.json",
+    ]:
+        dest = out / fname
+        if dest.exists():
+            print(f"  [skip]  {dest.name} already exists")
+            continue
+        print(f"  Downloading {fname} …")
+        try:
+            local_path = hf_hub_download(
+                repo_id=repo_id,
+                repo_type="dataset",
+                filename=fname,
+                token=token,
+                local_dir=str(out),
+            )
+            print(f"  Saved  → {Path(local_path).relative_to(BASE_DIR)}")
+        except Exception as exc:
+            print(f"  [error] {exc}")
+            print(
+                "  Make sure you accepted the license at HuggingFace and that HF_TOKEN is valid."
+            )
+
+
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
@@ -232,6 +288,7 @@ DOWNLOADERS = {
     "burstgpt": download_burstgpt,
     "wildchat": download_wildchat,
     "lmsys": download_lmsys,
+    "sharechat": download_sharechat,
 }
 
 

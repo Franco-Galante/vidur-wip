@@ -183,5 +183,7 @@ data/azure/*.csv
 data/*.csv
 data/all_available_traces/*
 !data/all_available_traces/*.py
+!data/all_available_traces/*.md
+!data/all_available_traces/*.ipynb
 _tmp/
 assets/
