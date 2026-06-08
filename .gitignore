@@ -179,7 +179,9 @@ experiments/profiling/get_profiled_data_from_trace.ipynb
 env_3
 
 # My custom ignore patterns
-data/azure/
+data/azure/*.csv
 data/*.csv
+data/all_available_traces/*
+!data/all_available_traces/*.py
 _tmp/
 assets/
