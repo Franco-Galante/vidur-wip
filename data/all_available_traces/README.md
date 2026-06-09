@@ -12,13 +12,14 @@ LMSYS and ShareChat require Hugging Face token and to accept the license to acce
 $env:HF_TOKEN = "hf_xxxx"   # PowerShell
 ```
 
-**Download datasets**
+**Usage**
 
 ```powershell
 # Download all datasets (from within the `all_available_traces` folder)
 python download_traces.py
 ```
 
+<br><br>
 
 ## Public LLM Inference Trace Datasets — Overview & Reference
 
