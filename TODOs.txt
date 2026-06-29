@@ -1,0 +1,5 @@
+Extend Vidur to consider *separately* prefill and decode jobs
+
+\Delta t di Michele -> motivazione: quando la KV cache è piena, non puoi spostare istantaneamente (se vuoi fare resume) lo spostamento, e finechè la KV chache è piena la GPU è freezzata! Nessun altro job puoi generare e perdi \nu*slot_time
+
+Motivare il fatto che consideriamo solo FIFO
